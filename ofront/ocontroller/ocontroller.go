@@ -1,10 +1,10 @@
 package ocontroller
 
 import (
-	ctrl "github.com/OKESTRO-AIDevOps/nkia/nokubelet/controller"
-	"github.com/OKESTRO-AIDevOps/nkia/nokubelet/modules"
 	"github.com/OKESTRO-AIDevOps/nkia/orch.io/ofront/omodels"
 	"github.com/OKESTRO-AIDevOps/nkia/orch.io/ofront/omodules"
+	ctrl "github.com/OKESTRO-AIDevOps/nkia/pkg/apistandard/apix"
+	modules "github.com/OKESTRO-AIDevOps/nkia/pkg/challenge"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
@@ -285,13 +285,11 @@ func KeyAuthCallback(c *gin.Context) {
 
 	var answer modules.ChallengRecord
 
-	session := sessions.Default(c)
-
 	var session_id string
 
-	v := session.Get("OSID")
+	v, err := c.Cookie("OSID")
 
-	if v == nil {
+	if err != nil {
 		fmt.Printf("login callback failed: %s\n", "no session")
 
 		res_orchestrator.ServerMessage = "no session"
@@ -300,10 +298,10 @@ func KeyAuthCallback(c *gin.Context) {
 
 		return
 	} else {
-		session_id = v.(string)
+		session_id = v
 	}
 
-	err := c.BindJSON(&req_orchestrator)
+	err = c.BindJSON(&req_orchestrator)
 
 	if err != nil {
 		fmt.Printf("login callback failed: %s\n", err.Error())

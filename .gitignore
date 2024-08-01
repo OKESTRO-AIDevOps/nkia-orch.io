@@ -1,6 +1,11 @@
 config.json
+oauth.json
 config.amld
 ofront/ofront
 osock/osock
 osock/okey
 okey
+*.crt
+*.priv
+*.pub
+*.gpg

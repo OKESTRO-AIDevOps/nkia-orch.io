@@ -5,9 +5,26 @@ import (
 	"os"
 )
 
-type ConfigJSON map[string]string
+type ConfigJSON struct {
+	DEBUG       bool   `json:"DEBUG"`
+	DB_HOST     string `json:"DB_HOST"`
+	DB_ID       string `json:"DB_ID"`
+	DB_PW       string `json:"DB_PW"`
+	DB_NAME     string `json:"DB_NAME"`
+	DB_HOST_DEV string `json:"DB_HOST_DEV"`
+}
 
-func GetConfig() ConfigJSON {
+func LoadConfig() {
+
+	CONFIG_JSON = GetConfigJSON()
+
+	OAUTH_JSON = GetOauthJSON()
+
+	GoogleOauthConfig = GenerateGoogleOauthConfig()
+
+}
+
+func GetConfigJSON() ConfigJSON {
 
 	var cj ConfigJSON
 
@@ -24,5 +41,28 @@ func GetConfig() ConfigJSON {
 	}
 
 	return cj
+
+}
+
+func GetOauthJSON() OauthJSON {
+
+	var oj OauthJSON
+
+	file_byte, err := os.ReadFile("oauth.json")
+
+	if err != nil {
+
+		panic(err)
+	}
+
+	err = json.Unmarshal(file_byte, &oj)
+
+	if err != nil {
+
+		panic(err)
+
+	}
+
+	return oj
 
 }
